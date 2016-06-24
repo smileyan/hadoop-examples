@@ -44,7 +44,7 @@ public abstract class Graph<Tv, Te> {
     abstract void dijkstra (int i);
     // abstract void pfs<PU> (int i, PU pu);
 
-    
+
     private void reset() {
         for (int i = 0; i < n; i++) {
             status(i, VStatus.UNDISCOVERED); dTime(i, -1); fTime(i, -1);
