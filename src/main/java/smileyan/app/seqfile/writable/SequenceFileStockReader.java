@@ -13,20 +13,20 @@ import smileyan.app.StockPriceWritable;
  * Created by hua on 25/06/16.
  */
 public class SequenceFileStockReader extends Configured implements Tool{
+
+    // hadoop jar target/my-app-1.0-SNAPSHOT.jar smileyan.app.seqfile.writable.SequenceFileStockReader /tmp/hua/stocks.seqfile
     public static void main(String[] args) throws Exception {
-        int exitCode = ToolRunner.run(new SequenceFileStockWriter(), args);
+        int exitCode = ToolRunner.run(new SequenceFileStockReader(), args);
         System.exit(exitCode);
     }
 
     public int run(String[] args) throws Exception {
-        if (args.length != 2) {
+        if (args.length != 1) {
             System.err.printf("Usage: %s [generic options] <input> <output>\n",
                     getClass().getSimpleName());
             ToolRunner.printGenericCommandUsage(System.err);
             return -1;
         }
-
-        Job job = Job.getInstance(getConf(), "SequenceFileStockWriter");
 
         Path inputFile = new Path(args[0]);
 
@@ -46,7 +46,7 @@ public class SequenceFileStockReader extends Configured implements Tool{
         } finally {
             reader.close();
         }
-        return job.waitForCompletion(true) ? 0 : 1;
+        return  0;
     }
 
 }

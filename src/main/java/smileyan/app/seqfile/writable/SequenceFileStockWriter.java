@@ -20,6 +20,9 @@ import java.io.IOException;
  */
 public class SequenceFileStockWriter extends Configured implements Tool{
 
+    // hadoop jar target/my-app-1.0-SNAPSHOT.jar smileyan.app.seqfile.writable.SequenceFileStockWriter \
+    //                                  ~/projects/hiped2/test-data/stocks.txt \
+    //                                  /tmp/hua/stocks.seqfile
     public static void main(String[] args) throws Exception {
         int exitCode = ToolRunner.run(new SequenceFileStockWriter(), args);
         System.exit(exitCode);
@@ -32,8 +35,6 @@ public class SequenceFileStockWriter extends Configured implements Tool{
             ToolRunner.printGenericCommandUsage(System.err);
             return -1;
         }
-
-        Job job = Job.getInstance(getConf(), "SequenceFileStockWriter");
 
         File inputFile = new File(args[0]);
         Path outputPath = new Path(args[1]);
@@ -57,8 +58,7 @@ public class SequenceFileStockWriter extends Configured implements Tool{
         } finally {
             writer.close();
         }
-
-        return job.waitForCompletion(true) ? 0 : 1;
+        return 0;
     }
 
     public static StockPriceWritable fromLine(String line)
