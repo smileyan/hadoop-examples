@@ -54,5 +54,12 @@
       <version>1.1.1</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.apache.pig/pig -->
+    <dependency>
+      <groupId>org.apache.pig</groupId>
+      <artifactId>pig</artifactId>
+      <version>0.16.0</version>
+    </dependency>
+
   </dependencies>
 </project>
