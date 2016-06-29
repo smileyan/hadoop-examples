@@ -16,6 +16,13 @@ import smileyan.app.StockPriceWritable;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * REGISTER $HPDOOP_EXAMPLES/target/my-app-1.0-SNAPSHOT.jar
+ * DEFINE SequenceFileStockLoader smileyan.app.seqfile.writable.SequenceFileStockLoader();
+ * stocks = LOAD '/tmp/hua/stocks.seqfile' USING SequenceFileStockLoader;
+ * dump stocks;
+ */
+
 public class SequenceFileStockLoader extends FileInputLoadFunc {
 
     private SequenceFileRecordReader<Text, StockPriceWritable> reader;
