@@ -2,21 +2,17 @@ package ch3.seqfile.protobuf;
 
 import ch3.proto.StockProtos;
 import ch3.proto.StockUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.DefaultCodec;
-import org.apache.hadoop.io.serializer.WritableSerialization;
-import org.apache.hadoop.io.serializer.avro.AvroReflectSerialization;
-import org.apache.hadoop.io.serializer.avro.AvroSpecificSerialization;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import smileyan.app.seqfile.writable.SequenceFileStockWriter;
 
 import java.io.File;
+
+import static ch3.seqfile.protobuf.ProtobufSerialization.register;
 
 /**
  * Created by hua on 30/06/16.
@@ -24,15 +20,11 @@ import java.io.File;
 public class SequenceFileProtobufWriter extends Configured implements Tool{
 
     /**
-     * hip hip.ch3.seqfile.protobuf.SequenceFileProtobufWriter \
-     --input test-data/stocks.txt \
-     --output stocks.pb
-     *
      * hadoop ch3.seqfile.protobuf.SequenceFileProtobufWriter test-data/stocks.txt /var/hadoop/stocks.pb
-     * */
+     */
 
     public static void main(String[] args) throws Exception {
-        int exitCode = ToolRunner.run(new SequenceFileStockWriter(), args);
+        int exitCode = ToolRunner.run(new SequenceFileProtobufWriter(), args);
         System.exit(exitCode);
     }
 
@@ -72,14 +64,5 @@ public class SequenceFileProtobufWriter extends Configured implements Tool{
         return 0;
     }
 
-    public static void register(Configuration conf) {
-        String[] serializations = conf.getStrings("io.serializations");
-        if (ArrayUtils.isEmpty(serializations)) {
-            serializations = new String[]{WritableSerialization.class.getName(),
-                    AvroSpecificSerialization.class.getName(),
-                    AvroReflectSerialization.class.getName()};
-        }
-        serializations = ArrayUtils.add(serializations, ProtobufSerialization.class.getName());
-        conf.setStrings("io.serializations", serializations);
-    }
+
 }

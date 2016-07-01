@@ -1,6 +1,7 @@
 package ch3.seqfile.protobuf;
 
 import com.google.protobuf.MessageLite;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -8,6 +9,9 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.serializer.Deserializer;
 import org.apache.hadoop.io.serializer.Serialization;
 import org.apache.hadoop.io.serializer.Serializer;
+import org.apache.hadoop.io.serializer.WritableSerialization;
+import org.apache.hadoop.io.serializer.avro.AvroReflectSerialization;
+import org.apache.hadoop.io.serializer.avro.AvroSpecificSerialization;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +33,19 @@ public class ProtobufSerialization extends Configured implements Serialization<M
 
     public boolean accept(Class<?> c) {
         return MessageLite.class.isAssignableFrom(c);
+    }
+
+    public static void register(Configuration conf) {
+        String[] serializations = conf.getStrings("io.serializations");
+        if (ArrayUtils.isEmpty(serializations)) {
+            serializations = new String[] {
+                    WritableSerialization.class.getName(),
+                    AvroSpecificSerialization.class.getName(),
+                    AvroReflectSerialization.class.getName()
+            };
+        }
+        serializations = ArrayUtils.add(serializations, ProtobufSerialization.class.getName());
+        conf.setStrings("io.serializations", serializations);
     }
 
     static class ProtobufDeserializer extends Configured implements Deserializer<MessageLite> {
