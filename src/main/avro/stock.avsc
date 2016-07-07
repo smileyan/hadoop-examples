@@ -5,8 +5,8 @@
   "fields": [
       {"name": "symbol",    "type": "string"},
       {"name": "date",      "type": "string"},
-      {"name": "open",      "type": "double"},
-      {"name": "high",      "type": "double"},
+      {"name": "open",      "type": "double",     "order": "descending"},
+      {"name": "high",      "type": "double",     "order": "ignore"},
       {"name": "low",       "type": "double"},
       {"name": "close",     "type": "double"},
       {"name": "volume",    "type": "int"},

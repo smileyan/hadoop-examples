@@ -1,0 +1,38 @@
+
+
+schematool -initSchema -dbType derby
+
+hive
+
+CREATE EXTERNAL TABLE stocks
+  ROW FORMAT SERDE
+  'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+  STORED AS INPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+  OUTPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+  LOCATION 
+  '/var/hadoop/stock_hive/'
+  TBLPROPERTIES (
+    'avro.schema.url'='/var/hadoop/schema/stock.avsc');
+
+SET hive.exec.compress.output=true;
+SET avro.output.codec=snappy;
+
+CREATE TABLE google_stocks
+  COMMENT "An Avro stocks table containing just Google stocks"
+  ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+  STORED AS INPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+  OUTPUTFORMAT
+  'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+  TBLPROPERTIES (
+    'avro.schema.url'='/var/hadoop/schema/stock.avsc'
+  );
+
+INSERT OVERWRITE TABLE google_stocks
+  SELECT * FROM stocks WHERE symbol = 'GOOG';
+
+select * from google_stocks limit 5;
+
+
