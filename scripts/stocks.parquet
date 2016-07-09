@@ -1,0 +1,4 @@
+my-app.sh parquet.tools.Main schema /var/hadoop/stocks.parquet
+my-app.sh parquet.tools.Main cat /var/hadoop/stocks.parquet
+my-app.sh parquet.tools.Main meta /var/hadoop/stocks.parquet
+
