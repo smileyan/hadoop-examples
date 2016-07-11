@@ -2,3 +2,21 @@ my-app.sh parquet.tools.Main schema /var/hadoop/stocks.parquet
 my-app.sh parquet.tools.Main cat /var/hadoop/stocks.parquet
 my-app.sh parquet.tools.Main meta /var/hadoop/stocks.parquet
 
+hadoop fs -mkdir /var/hadoop/parquet_avro_stocks
+
+hadoop fs -cp /var/hadoop/stocks.parquet /var/hadoop/parquet_avro_stocks
+
+
+CREATE EXTERNAL TABLE parquet_stocks(
+   symbol string,
+   date_ string,
+   open double,
+   high double,
+   low double,
+   close double,
+   volume int,
+   adjClose double
+ ) STORED AS PARQUET
+ LOCATION '/var/hadoop/parquet_avro_stocks';
+
+select distinct(symbol) from parquet_stocks;
