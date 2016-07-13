@@ -6,11 +6,10 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.DefaultCodec;
-import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import smileyan.app.StockPriceWritable;
+import ch3.StockPriceWritable;
 
 import java.io.File;
 import java.io.IOException;

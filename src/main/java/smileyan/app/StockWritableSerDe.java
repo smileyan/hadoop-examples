@@ -1,5 +1,6 @@
 package smileyan.app;
 
+import ch3.StockPriceWritable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde.serdeConstants;
 import org.apache.hadoop.hive.serde2.AbstractSerDe;

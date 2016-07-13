@@ -4,10 +4,9 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import smileyan.app.StockPriceWritable;
+import ch3.StockPriceWritable;
 
 /**
  * Created by hua on 25/06/16.

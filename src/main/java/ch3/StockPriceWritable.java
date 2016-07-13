@@ -1,4 +1,4 @@
-package smileyan.app;
+package ch3;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -148,5 +148,21 @@ public class StockPriceWritable implements WritableComparable<StockPriceWritable
 
     public double getAdjClose() {
         return adjClose;
+    }
+
+    public static StockPriceWritable fromLine(String line)
+            throws IOException {
+        String[] parts = line.split(",");
+
+        StockPriceWritable stock = new StockPriceWritable(
+                //<co id="ch03_comment_seqfile_write3"/>
+                parts[0], parts[1], Double.valueOf(parts[2]),
+                Double.valueOf(parts[3]),
+                Double.valueOf(parts[4]),
+                Double.valueOf(parts[5]),
+                Integer.valueOf(parts[6]),
+                Double.valueOf(parts[7])
+        );
+        return stock;
     }
 }

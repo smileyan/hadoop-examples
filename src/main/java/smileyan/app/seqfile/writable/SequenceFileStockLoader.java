@@ -11,7 +11,7 @@ import org.apache.pig.FileInputLoadFunc;
 import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
-import smileyan.app.StockPriceWritable;
+import ch3.StockPriceWritable;
 
 import java.io.IOException;
 import java.util.Arrays;
