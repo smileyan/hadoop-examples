@@ -58,7 +58,22 @@ public class LzopFileReadWrite extends Configured implements Tool {
         return dest;
     }
 
-    public static void decompress(Path dest, Path restoredFile, Configuration conf) {
+    public static void decompress(Path src, Path dest, Configuration conf) throws IOException {
+        LzopCodec codec = new LzopCodec();
+        codec.setConf(conf);
 
+        FileSystem hdfs = FileSystem.get(conf);
+        InputStream in = null;
+        OutputStream out = null;
+
+        try {
+            in = hdfs.open(src);
+            out = hdfs.create(dest);
+
+            IOUtils.copyBytes(in, out, conf);
+        } finally {
+            IOUtils.closeStream(in);
+            IOUtils.closeStream(out);
+        }
     }
 }
