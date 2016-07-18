@@ -1,0 +1,4 @@
+hadoop fs -put src dest
+hadoop fs -put -f src desc # force the file to be overwritten
+hadoop fs -put local_file1 local_file2 /var/hadoop/dir
+echo "the cat sat on the mat" | hadoop fs -put - hdfs-file # hyphen means standard input
