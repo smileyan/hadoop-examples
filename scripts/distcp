@@ -1,0 +1,44 @@
+hadoop distcp /hello /world
+
+---------------------------------------------------------------------------------------------------
+    Argument                                |                  Description
+---------------------------------------------------------------------------------------------------
+None (neither -update nor -overwrite)       |  Source files are never recopied if the destination already exists.
+---------------------------------------------------------------------------------------------------
+-update
+---------------------------------------------------------------------------------------------------
+-overwrite
+
+#####################################################################################################
+
+# create a source directory and file
+$ hadoop fs -mkdir /src
+$ hadoop fs -touchz /src/file1.txt
+
+# create a destination directory
+$ hadoop fs -mkdir /dest
+
+# run a distcp without any options
+$ hadoop distcp /src /dest
+$ hadoop fs -ls -R /dest
+/dest/src
+/dest/src/file1.txt
+
+# now run the same command again with the -update argument
+$ hadoop distcp -update /src /dest
+$ hadoop fs -ls -R /dest
+/dest/file1.txt
+/dest/src
+/dest/src/file1.txt
+
+$ hadoop distcp file://my_filer/source /dest
+
+$ hadoop distcp /source /dest
+
+$ hadoop distcp hdfs://nn1:8020/source hdfs://nn2:8020/dest
+
+$ hadoop distcp hftp://nn1:50070/source hdfs://nn2:8020/dest
+
+$ hadoop distcp hdfs://nn1:50070/source webhdfs://nn2:50070/dest
+
+
