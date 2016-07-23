@@ -1,0 +1,18 @@
+sqoop import --username admin \
+             --password pw \
+             --connect jdbc:mysql://127.0.0.1/sqoop_test \
+             --table stocks
+
+sqoop import \
+          --username hip_sqoop_user \
+          --password password \
+          --as-avrodatafile \
+          --compress \
+          --compression-codec org.apache.hadoop.io.compress.SnappyCodec \
+          --connect jdbc:mysql://127.0.0.1/sqoop_test \
+          --table stocks \
+          --where "symbol = 'AAPL'" \
+          --columns "symbol,quote_date,close_price" \
+          --target-dir /var/hadoop/mystocks
+
+my-app.sh utils.AvroDump /var/hadoop/mystocks/part-m-00000.avro
