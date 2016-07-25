@@ -16,3 +16,75 @@ sqoop import \
           --target-dir /var/hadoop/mystocks
 
 my-app.sh utils.AvroDump /var/hadoop/mystocks/part-m-00000.avro
+
+read -d '' query << "EOF"     
+select * from stocks                                                                                    
+where symbol in ("AAPL", "GOOG")
+and quote_date between "2007-01-01" AND "2007-12-31"
+AND $CONDITIONS
+EOF
+
+
+sqoop import \
+          --username hip_sqoop_user \
+          --password password \
+          --connect jdbc:mysql://127.0.0.1/sqoop_test \
+          --query "$query" \
+          --split-by id \
+          --target-dir /var/hadoop/cstocks
+
+
+--password-file
+
+touch ~/.sqoop-import-opts
+
+import
+--username
+hip_sqoop_user
+--password
+password
+
+chmod 600 ~/.sqoop-import
+
+sqoop \
+          --options-file ~/.sqoop-import-opts \
+          --connect jdbc:mysql://localhost/sqoop_test \
+          --table stocks
+
+sqoop import \
+          --username hip_sqoop_user \
+          --password password \
+          --check-column "quote_date" \
+          --incremental "lastmodified" \
+          --last-value "2005-01-01" \
+          --connect jdbc:mysql://localhost/sqoop_test \
+          --table stocks \
+          --target-dir /var/hadoop/stocks_new
+
+sqoop job --create stock_increment -- import \
+          --append \
+          --check-column "quote_date" \
+          --incremental "lastmodified" \
+          --last-value "2005-01-01" \
+          --connect jdbc:mysql://localhost/sqoop_test \
+          --username hip_sqoop_user \
+          --table stocks \
+          --target-dir /var/hadoop/stocks_job
+sqoop job --list
+sqoop job --exec stock_increment
+sqoop job --show stock_increment
+
+sqoop job --delete stock_increment
+
+# mysqldump
+sqoop --options-file ~/.sqoop-import-opts \
+          --direct \
+          --connect jdbc:mysql://localhost/sqoop_test \
+          --table stocks
+
+sqoop import \
+          --options-file ~/.sqoop-import-opts \
+          --hive-import \
+          --connect jdbc:mysql://localhost/sqoop_test \
+          --table stocks \
+          --target_dir /var/hadoop/stocks_hive
