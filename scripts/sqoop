@@ -88,3 +88,32 @@ sqoop import \
           --connect jdbc:mysql://localhost/sqoop_test \
           --table stocks \
           --target_dir /var/hadoop/stocks_hive
+
+hive
+drop table stocks;
+
+sqoop --options-file ~/.sqoop-import-opts \
+          --hive-import \
+          --hive-overwrite \
+          --compress \
+          --compression-codec com.hadoop.compression.lzo.LzopCodec \
+          --connect jdbc:mysql://localhost/sqoop_test \
+          --table stocks
+
+
+read -d '' query << "EOF"
+SELECT id, quote_date, open_price
+FROM stocks
+WHERE symbol = "AAPL" AND $CONDITIONS
+EOF
+
+sqoop --options-file ~/.sqoop_import_options.txt \
+          --query "$query" \
+          --split-by id \
+          --hive-import \
+          --hive-table stocks \
+          --hive-overwrite \
+          --hive-partition-key symbol \
+          --hive-partition-value "AAPL" \
+          --connect jdbc:mysql://localhost/sqoop_test \
+          --target-dir stocks
