@@ -1,13 +1,21 @@
 package ch6.joins.repartition;
 
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
+
+import java.io.IOException;
 
 /**
  * Created by hua on 06/08/16.
@@ -17,12 +25,50 @@ public class StreamingRepartitionJoin extends Configured implements Tool {
     @Override
     public int run(String[] args) throws Exception {
 
+        Path usersPath = new Path(args[0]);
+        Path userLogsPath = new Path(args[1]);
+        Path outputPath = new Path(args[2]);
+
         Job job = Job.getInstance(getConf(), "Stream repartition join");
 
-        setPartitionerClass(job);
+        job.setJarByClass(StreamingRepartitionJoin.class);
 
+        setPartitionerClass(job);
+        setSortComparatorClass(job);
+        setGroupingComparatorClass(job);
+
+        MultipleInputs.addInputPath(job, usersPath, TextInputFormat.class, UserMap.class);
+        MultipleInputs.addInputPath(job, userLogsPath, TextInputFormat.class, UserLogMap.class);
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Text.class);
+
+        job.setReducerClass(Reduce.class);
+
+        FileOutputFormat.setOutputPath(job, outputPath);
 
         return job.waitForCompletion(true)? 0 : 1;
+    }
+
+    public static class Reduce extends Reducer<Text, Text, Text, Text> {
+        @Override
+        protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+            super.reduce(key, values, context);
+        }
+    }
+
+    public static class UserMap extends Mapper<LongWritable, Text, Text, Text> {
+        @Override
+        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+            super.map(key, value, context);
+        }
+    }
+
+    public static class UserLogMap extends Mapper<LongWritable, Text, Text, Text> {
+        @Override
+        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+            super.map(key, value, context);
+        }
     }
 
     // Partitioner controls the partitioning of the keys of the intermediate map-outputs.
