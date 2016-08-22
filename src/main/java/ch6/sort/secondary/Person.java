@@ -42,7 +42,7 @@ public class Person implements WritableComparable<Person> {
         return lastName.compareTo(o.lastName);
     }
 
-    
+
     public String getLastName() {
         return lastName;
     }
