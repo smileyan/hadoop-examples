@@ -12,6 +12,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import java.io.IOException;
+
 /**
  * Created by hua on 25/08/16.
  */
@@ -58,10 +60,28 @@ public class SortMapReduce extends Configured implements Tool{
     public static class Map
             extends Mapper<Text, Text, Person, Text> {
 
+        private Person outputKey = new Person();
+
+        @Override
+        protected void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+            outputKey.setFirstName(value.toString());
+            outputKey.setLastName(key.toString());
+
+            context.write(outputKey, value);
+        }
     }
 
     public static class Reduce
             extends Reducer<Person, Text, Text, Text> {
 
+        Text lastName = new Text();
+
+        @Override
+        protected void reduce(Person key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+            lastName.set(key.getLastName());
+            for (Text firstName : values) {
+                context.write(lastName, firstName);
+            }
+        }
     }
 }
