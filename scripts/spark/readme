@@ -1,2 +1,7 @@
 wget http://en.wikipedia.org/wiki/Hortonworks
 
+>>> lines = sc.textFile('/home/hua/tmp/my-app/scripts/spark/Hortonworks')
+>>> linesFiltered = lines.filter( lambda x: len(x) > 0)
+>>> count = linesFiltered.count()
+>>> print count
+
