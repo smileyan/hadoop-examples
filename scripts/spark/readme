@@ -5,3 +5,24 @@ wget http://en.wikipedia.org/wiki/Hortonworks
 >>> count = linesFiltered.count()
 >>> print count
 
+spark-submit --class org.apache.spark.examples.SparkPi 
+             --master yarn-client 
+             --num-executors 3 
+             --driver-memory 512m 
+             --executor-memory 512m -
+             -executor-cores 1 
+             lib/spark-examples*.jar 10
+
+spark-shell --master yarn-client 
+            --driver-memory 512m 
+            --executor-memory 512m
+
+val file = sc.textFile("/tmp/data")
+val counts = file.flatMap(line => line.split(" "))
+                 .map(word => (word, 1))
+                 .reduceByKey(_ + _)
+
+counts.saveAsTextFile("/tmp/wordcount")
+counts.count()
+counts.toArray().foreach(println)
+
