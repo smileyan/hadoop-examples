@@ -45,3 +45,10 @@ val df = spark.read.json("examples/src/main/resources/people.json")
 
 // Displays the content of the DataFrame to stdout
 df.show()
+
+df.printSchema()
+
+df.select("name").show()
+df.select($"name", $"age" + 1).show()
+df.filter($"age" > 21).show
+df.groupBy($"age").count().show()
